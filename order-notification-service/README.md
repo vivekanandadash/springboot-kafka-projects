@@ -150,4 +150,3 @@ springboot-kafka-projects/
 
 **Vivekananda Dash**
 
-Learning Backend Development, Microservices, Kafka, Spring Boot, and Cloud Technologies.
