@@ -1,0 +1,4 @@
+package com.notification_service.config;
+
+public class TwilioConfig {
+}

@@ -1,0 +1,4 @@
+package com.notification_service.service;
+
+public class WhatsAppService {
+}
