@@ -6,6 +6,7 @@ public class OrderEvent {
 
     private Long orderId;
     private String email;
+    private String mobile;
     private String status;
     private BigDecimal totalAmount;
     private String customerName;
@@ -25,6 +26,14 @@ public class OrderEvent {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getMobile() {
+        return mobile;
+    }
+
+    public void setMobile(String mobile) {
+        this.mobile = mobile;
     }
 
     public String getStatus() {
