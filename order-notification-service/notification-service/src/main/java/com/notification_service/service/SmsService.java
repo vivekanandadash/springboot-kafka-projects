@@ -5,34 +5,74 @@ import com.twilio.type.PhoneNumber;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+
 @Service
-public class TwilioMessageService {
+public class SmsService {
 
     @Value("${twilio.sms-from}")
     private String smsFrom;
 
-    @Value("${twilio.whatsapp-from}")
-    private String whatsappFrom;
+    public void sendOrderSms(
+            String to,
+            String customerName,
+            Long orderId,
+            String status,
+            BigDecimal totalAmount
+    ) {
 
-    public String sendSms(String to, String messageBody) {
+        try {
 
-        Message message = Message.creator(
-                new PhoneNumber(to),
-                new PhoneNumber(smsFrom),
-                messageBody
-        ).create();
+            String smsBody;
 
-        return message.getSid();
-    }
+            // =========================
+            // SUCCESS SMS
+            // =========================
+            if (status.equalsIgnoreCase("SUCCESS")) {
 
-    public String sendWhatsappMessage(String to, String messageBody) {
+                smsBody =
+                        "ShopCore: Hi "
+                                + customerName
+                                + ", your order #"
+                                + orderId
+                                + " has been placed successfully."
+                                + " Amount: ₹"
+                                + totalAmount
+                                + ". Thank you for shopping with us.";
 
-        Message message = Message.creator(
-                new PhoneNumber("whatsapp:" + to),
-                new PhoneNumber(whatsappFrom),
-                messageBody
-        ).create();
+            }
 
-        return message.getSid();
+            // =========================
+            // CANCEL SMS
+            // =========================
+            else {
+
+                smsBody =
+                        "ShopCore: Hi "
+                                + customerName
+                                + ", your order #"
+                                + orderId
+                                + " has been cancelled."
+                                + " Refund will be processed if applicable.";
+            }
+
+            // Sending SMS using Twilio
+            Message message = Message.creator(
+                    new PhoneNumber(to),
+                    new PhoneNumber(smsFrom),
+                    smsBody
+            ).create();
+
+            System.out.println(
+                    "SMS Sent Successfully : "
+                            + message.getSid()
+            );
+
+        } catch (Exception e) {
+
+            System.out.println("SMS Sending Failed");
+
+            e.printStackTrace();
+        }
     }
 }
