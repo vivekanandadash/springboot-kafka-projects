@@ -1,10 +1,8 @@
 package com.notification_service.service;
 
 import jakarta.mail.internet.MimeMessage;
-import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
-import org.springframework.messaging.MessagingException;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -26,116 +24,53 @@ public class EmailService {
 
         try {
 
-            MimeMessage mimeMessage = mailSender.createMimeMessage();
+            MimeMessage message = mailSender.createMimeMessage();
 
             MimeMessageHelper helper =
-                    new MimeMessageHelper(mimeMessage, true);
+                    new MimeMessageHelper(message, true);
 
             helper.setTo(to);
 
-            String subject = "";
-            String htmlContent = "";
+            String subject;
+            String body;
 
-            // SUCCESS EMAIL
-            if ("SUCCESS".equalsIgnoreCase(status)) {
+            // SUCCESS MAIL
+            if (status.equalsIgnoreCase("SUCCESS")) {
 
-                subject = "Your Order Has Been Placed Successfully";
+                subject = "Order Placed Successfully";
 
-                htmlContent =
-                        "<div style='font-family: Arial; padding:20px;'>"
-
-                                + "<h2 style='color:green;'>ShopCore Order Confirmation</h2>"
-
-                                + "<p>Hello <b>" + customerName + "</b>,</p>"
-
-                                + "<p>Your order has been placed successfully.</p>"
-
-                                + "<table style='border-collapse: collapse; width: 400px;'>"
-
-                                + "<tr>"
-                                + "<td style='border:1px solid #ddd; padding:8px;'>Order ID</td>"
-                                + "<td style='border:1px solid #ddd; padding:8px;'>"
-                                + orderId +
-                                "</td>"
-                                + "</tr>"
-
-                                + "<tr>"
-                                + "<td style='border:1px solid #ddd; padding:8px;'>Status</td>"
-                                + "<td style='border:1px solid #ddd; padding:8px;'>"
-                                + status +
-                                "</td>"
-                                + "</tr>"
-
-                                + "<tr>"
-                                + "<td style='border:1px solid #ddd; padding:8px;'>Total Amount</td>"
-                                + "<td style='border:1px solid #ddd; padding:8px;'>₹"
-                                + totalAmount +
-                                "</td>"
-                                + "</tr>"
-
-                                + "</table>"
-
-                                + "<br>"
-
-                                + "<p>Thank you for shopping with us ❤️</p>"
-
-                                + "<p>Team ShopCore</p>"
-
-                                + "</div>";
+                body =
+                        "<h2 style='color:green;'>ShopCore</h2>"
+                                + "<p>Hello " + customerName + ",</p>"
+                                + "<p>Your order placed successfully.</p>"
+                                + "<p><b>Order ID:</b> " + orderId + "</p>"
+                                + "<p><b>Total Amount:</b> ₹" + totalAmount + "</p>"
+                                + "<p>Thank you for shopping with us.</p>";
             }
 
-            // CANCELLED EMAIL
-            else if ("CANCELLED".equalsIgnoreCase(status)) {
+            // CANCEL MAIL
+            else {
 
-                subject = "Your Order Has Been Cancelled";
+                subject = "Order Cancelled";
 
-                htmlContent =
-                        "<div style='font-family: Arial; padding:20px;'>"
-
-                                + "<h2 style='color:red;'>Order Cancelled</h2>"
-
-                                + "<p>Hello <b>" + customerName + "</b>,</p>"
-
-                                + "<p>We regret to inform you that your order has been cancelled.</p>"
-
-                                + "<table style='border-collapse: collapse; width: 400px;'>"
-
-                                + "<tr>"
-                                + "<td style='border:1px solid #ddd; padding:8px;'>Order ID</td>"
-                                + "<td style='border:1px solid #ddd; padding:8px;'>"
-                                + orderId +
-                                "</td>"
-                                + "</tr>"
-
-                                + "<tr>"
-                                + "<td style='border:1px solid #ddd; padding:8px;'>Status</td>"
-                                + "<td style='border:1px solid #ddd; padding:8px;'>"
-                                + status +
-                                "</td>"
-                                + "</tr>"
-
-                                + "</table>"
-
-                                + "<br>"
-
-                                + "<p>If payment was deducted, refund will be processed shortly.</p>"
-
-                                + "<p>Need help? Contact support.</p>"
-
-                                + "<p>Team ShopCore</p>"
-
-                                + "</div>";
+                body =
+                        "<h2 style='color:red;'>ShopCore</h2>"
+                                + "<p>Hello " + customerName + ",</p>"
+                                + "<p>Your order has been cancelled.</p>"
+                                + "<p><b>Order ID:</b> " + orderId + "</p>"
+                                + "<p>If payment deducted, refund will be processed soon.</p>";
             }
 
             helper.setSubject(subject);
 
-            helper.setText(htmlContent, true);
+            helper.setText(body, true);
 
-            mailSender.send(mimeMessage);
+            mailSender.send(message);
 
             System.out.println("Email Sent Successfully");
 
         } catch (Exception e) {
+
             e.printStackTrace();
         }
     }
