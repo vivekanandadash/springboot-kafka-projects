@@ -1,56 +1,27 @@
 package com.notification_service.config;
 
 import com.notification_service.dto.OrderEvent;
-import org.apache.kafka.clients.consumer.ConsumerConfig;
-import org.apache.kafka.common.serialization.StringDeserializer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
 import org.springframework.kafka.core.ConsumerFactory;
-import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
-import org.springframework.kafka.support.serializer.JacksonJsonDeserializer;
+import org.springframework.kafka.listener.ContainerProperties;
 
-import java.util.HashMap;
-import java.util.Map;
 
 @Configuration
 public class KafkaConsumerConfig {
 
     @Bean
-    public ConsumerFactory<String, OrderEvent> consumerFactory() {
-
-        Map<String, Object> config = new HashMap<>();
-
-        config.put(
-                ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG,
-                "localhost:9092"
-        );
-
-        config.put(
-                ConsumerConfig.GROUP_ID_CONFIG,
-                "notification-group"
-        );
-
-        JacksonJsonDeserializer<OrderEvent> deserializer =
-                new JacksonJsonDeserializer<>(OrderEvent.class);
-
-        deserializer.addTrustedPackages("*");
-
-        return new DefaultKafkaConsumerFactory<>(
-                config,
-                new StringDeserializer(),
-                deserializer
-        );
-    }
-
-    @Bean
     public ConcurrentKafkaListenerContainerFactory<String, OrderEvent>
-    kafkaListenerContainerFactory() {
+    kafkaListenerContainerFactory(ConsumerFactory<String, OrderEvent> consumerFactory) {
 
         ConcurrentKafkaListenerContainerFactory<String, OrderEvent> factory =
                 new ConcurrentKafkaListenerContainerFactory<>();
 
-        factory.setConsumerFactory(consumerFactory());
+        factory.setConsumerFactory(consumerFactory);
+        factory.getContainerProperties()
+                .setAckMode(ContainerProperties.AckMode.RECORD);
+
 
         return factory;
     }
