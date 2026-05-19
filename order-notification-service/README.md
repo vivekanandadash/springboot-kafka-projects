@@ -1,6 +1,6 @@
 # Spring Boot Kafka Projects
 
-This repository contains multiple Kafka-based microservice practice projects built using **Spring Boot** and **Apache Kafka**. The goal of this repository is to learn and demonstrate real-time communication between microservices using Kafka.
+This repository contains multiple Kafka-based microservice practice projects built using **Spring Boot** and **Apache Kafka**. The goal of this repository is to learn and demonstrate real-time communication between Microservices using Kafka.
 
 ---
 
